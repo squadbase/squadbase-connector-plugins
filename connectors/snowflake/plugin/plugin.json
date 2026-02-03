@@ -1,0 +1,8 @@
+{
+  "name": "snowflake-connector",
+  "description": "Snowflake connector plugin for Squadbase",
+  "version": "0.0.1",
+  "author": {
+    "name": "Squadbase"
+  }
+}
