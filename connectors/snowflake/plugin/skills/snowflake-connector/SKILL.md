@@ -4,7 +4,10 @@ description: Connect to Snowflake to analyze and generate a dashboard in Squadba
 
 ## Connecting from a dashboard
 
-Use the client file to access Snowflake in `lib/snowflake.ts`:
+Use the client file to access Snowflake in `lib/snowflake.ts`.
+
+- If `snowflake-sdk` is not installed, install it with `npm install snowflake-sdk`.
+- If client file is not present, create it.
 
 ```typescript lib/snowflake.ts
 import snowflake from "snowflake-sdk";
@@ -27,16 +30,9 @@ export function createSnowflakeConnection() {
 }
 ```
 
-- If client file is not present, create it.
-- If `snowflake-sdk` is not installed, install it with `npm install snowflake-sdk`.
-
 ## Explore data
 
-To understand the data source or identify data to use in your dashboard, create and run temporary scripts.
-
-Use the Snowflake client above to explore datasets. For example:
-
-Example exploration script:
+To understand the data source or identify data to use in your dashboard, create and run scripts in `explore/` directory.
 
 ```typescript explore/user-activity.ts
 import { createSnowflakeConnection } from "../lib/snowflake";
