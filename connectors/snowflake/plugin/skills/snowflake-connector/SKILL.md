@@ -4,7 +4,10 @@ description: Connect to Snowflake to analyze and generate a dashboard in Squadba
 
 ## Connecting from a dashboard
 
-Use the client file to access Snowflake in `lib/snowflake.ts`:
+Use the client file to access Snowflake in `lib/snowflake.ts`.
+
+- If `snowflake-sdk` is not installed, install it with `npm install snowflake-sdk`.
+- If client file is not present, create it.
 
 ```typescript lib/snowflake.ts
 import snowflake from "snowflake-sdk";
@@ -27,28 +30,12 @@ export function createSnowflakeConnection() {
 }
 ```
 
-- If client file is not present, create it.
-- If `snowflake-sdk` is not installed, install it with `npm install snowflake-sdk`.
-
 ## Explore data
 
-To understand the data source or identify data to use in your dashboard, create and run temporary scripts.
-
-Use the Snowflake client above to explore datasets. For example:
-
-Example exploration script:
+To understand the data source or identify data to use in your dashboard, create and run scripts in `explore/` directory.
 
 ```typescript explore/user-activity.ts
 import { createSnowflakeConnection } from "../lib/snowflake";
-
-const connection = createSnowflakeConnection();
-
-await new Promise<void>((resolve, reject) => {
-  connection.connect((err) => {
-    if (err) reject(err);
-    else resolve();
-  });
-});
 
 interface UserActivity {
   USER_ID: string;
@@ -56,33 +43,46 @@ interface UserActivity {
   ACTIVITY_TIMESTAMP: Date;
 }
 
-const rows = await new Promise<UserActivity[]>((resolve, reject) => {
-  connection.execute({
-    sqlText: `
-      SELECT
-        user_id,
-        activity_type,
-        activity_timestamp
-      FROM
-        your_database.your_schema.user_activity
-      LIMIT 10
-    `,
-    complete: (err, _stmt, rows) => {
+async function main() {
+  const connection = createSnowflakeConnection();
+
+  await new Promise<void>((resolve, reject) => {
+    connection.connect((err) => {
       if (err) reject(err);
-      else resolve((rows ?? []) as UserActivity[]);
-    },
+      else resolve();
+    });
   });
-});
 
-console.log("User Activity:");
+  const rows = await new Promise<UserActivity[]>((resolve, reject) => {
+    connection.execute({
+      sqlText: `
+        SELECT
+          user_id,
+          activity_type,
+          activity_timestamp
+        FROM
+          your_database.your_schema.user_activity
+        LIMIT 10
+      `,
+      complete: (err, _stmt, rows) => {
+        if (err) reject(err);
+        else resolve((rows ?? []) as UserActivity[]);
+      },
+    });
+  });
 
-rows.forEach((row) => {
-  console.log(
-    `${row.USER_ID}: ${row.ACTIVITY_TYPE} at ${row.ACTIVITY_TIMESTAMP}`,
-  );
-});
+  console.log("User Activity:");
 
-connection.destroy(() => {});
+  rows.forEach((row) => {
+    console.log(
+      `${row.USER_ID}: ${row.ACTIVITY_TYPE} at ${row.ACTIVITY_TIMESTAMP}`,
+    );
+  });
+
+  connection.destroy(() => {});
+}
+
+main();
 ```
 
 - Create files in the `explore/` directory.
