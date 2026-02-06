@@ -41,48 +41,52 @@ Example exploration script:
 ```typescript explore/user-activity.ts
 import { createSnowflakeConnection } from "../lib/snowflake";
 
-const connection = createSnowflakeConnection();
-
-await new Promise<void>((resolve, reject) => {
-  connection.connect((err) => {
-    if (err) reject(err);
-    else resolve();
-  });
-});
-
 interface UserActivity {
   USER_ID: string;
   ACTIVITY_TYPE: string;
   ACTIVITY_TIMESTAMP: Date;
 }
 
-const rows = await new Promise<UserActivity[]>((resolve, reject) => {
-  connection.execute({
-    sqlText: `
-      SELECT
-        user_id,
-        activity_type,
-        activity_timestamp
-      FROM
-        your_database.your_schema.user_activity
-      LIMIT 10
-    `,
-    complete: (err, _stmt, rows) => {
+async function main() {
+  const connection = createSnowflakeConnection();
+
+  await new Promise<void>((resolve, reject) => {
+    connection.connect((err) => {
       if (err) reject(err);
-      else resolve((rows ?? []) as UserActivity[]);
-    },
+      else resolve();
+    });
   });
-});
 
-console.log("User Activity:");
+  const rows = await new Promise<UserActivity[]>((resolve, reject) => {
+    connection.execute({
+      sqlText: `
+        SELECT
+          user_id,
+          activity_type,
+          activity_timestamp
+        FROM
+          your_database.your_schema.user_activity
+        LIMIT 10
+      `,
+      complete: (err, _stmt, rows) => {
+        if (err) reject(err);
+        else resolve((rows ?? []) as UserActivity[]);
+      },
+    });
+  });
 
-rows.forEach((row) => {
-  console.log(
-    `${row.USER_ID}: ${row.ACTIVITY_TYPE} at ${row.ACTIVITY_TIMESTAMP}`,
-  );
-});
+  console.log("User Activity:");
 
-connection.destroy(() => {});
+  rows.forEach((row) => {
+    console.log(
+      `${row.USER_ID}: ${row.ACTIVITY_TYPE} at ${row.ACTIVITY_TIMESTAMP}`,
+    );
+  });
+
+  connection.destroy(() => {});
+}
+
+main();
 ```
 
 - Create files in the `explore/` directory.
