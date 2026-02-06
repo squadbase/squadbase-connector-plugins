@@ -1,0 +1,8 @@
+{
+  "name": "google-analytics-connector",
+  "description": "Google Analytics connector plugin for Squadbase",
+  "version": "0.0.1",
+  "author": {
+    "name": "Squadbase"
+  }
+}

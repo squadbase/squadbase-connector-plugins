@@ -1,0 +1,8 @@
+{
+  "name": "mysql-connector",
+  "description": "MySQL connector plugin for Squadbase",
+  "version": "0.0.1",
+  "author": {
+    "name": "Squadbase"
+  }
+}

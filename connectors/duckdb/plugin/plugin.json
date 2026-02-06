@@ -1,0 +1,8 @@
+{
+  "name": "duckdb-connector",
+  "description": "Excel/CSV connector plugin for Squadbase (powered by DuckDB)",
+  "version": "0.0.1",
+  "author": {
+    "name": "Squadbase"
+  }
+}
