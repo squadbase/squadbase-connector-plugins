@@ -1,0 +1,8 @@
+{
+  "name": "bigquery-oauth-connector",
+  "description": "BigQuery OAuth connector plugin for Squadbase",
+  "version": "0.0.1",
+  "author": {
+    "name": "Squadbase"
+  }
+}
