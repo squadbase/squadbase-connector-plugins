@@ -32,12 +32,12 @@ Use the client file to access BigQuery via OAuth proxy in `lib/bigquery.ts`.
 - If client file is not present, create it.
 
 ```typescript lib/bigquery.ts
-import { createConnectionClient } from "@squadbase/nextjs";
+import { createNextjsServerClient } from "@squadbase/nextjs";
 
 export const BIGQUERY_API_BASE = "https://bigquery.googleapis.com/bigquery/v2";
 
 export function createBigQueryClient() {
-  return createConnectionClient({ connectionId: "<connection-id>" });
+  return createNextjsServerClient().connection("<your-connection-id>");
 }
 
 export function getProjectId() {
@@ -84,7 +84,7 @@ import {
 } from "../lib/bigquery";
 
 async function main() {
-  const client = createBigQueryClient("YOUR_CONNECTION_ID");
+  const client = createBigQueryClient();
   const projectId = getProjectId();
 
   const res = await client.fetch(
